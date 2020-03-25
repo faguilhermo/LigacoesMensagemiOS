@@ -10,6 +10,8 @@ import UIKit
 
 class MainViewController: UIViewController {
 
+    var message = Message()
+
     private lazy var numberTextField: UITextField = {
         let numberTextField = UITextField(frame: .zero)
         numberTextField.translatesAutoresizingMaskIntoConstraints = false
@@ -17,6 +19,7 @@ class MainViewController: UIViewController {
         numberTextField.textContentType = .telephoneNumber
         numberTextField.keyboardType = .numberPad
         numberTextField.clearButtonMode = .always
+        setupDismissNumberPad(on: numberTextField)
 
         return numberTextField
     }()
@@ -34,7 +37,7 @@ class MainViewController: UIViewController {
         messageButton.translatesAutoresizingMaskIntoConstraints = false
         messageButton.setTitle("Enviar mensagem", for: .normal)
         messageButton.layer.cornerRadius = 25
-        messageButton.backgroundColor = #colorLiteral(red: 0.1960784346, green: 0.3411764801, blue: 0.1019607857, alpha: 1)
+        messageButton.backgroundColor = #colorLiteral(red: 0.2745098174, green: 0.4862745106, blue: 0.1411764771, alpha: 1)
         messageButton.setTitleColor(#colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), for: .normal)
         messageButton.addTarget(self, action: #selector(messageButtonAction(_ :)), for: .touchUpInside)
 
@@ -44,9 +47,9 @@ class MainViewController: UIViewController {
     private lazy var callButton: UIButton = {
         let callButton = UIButton(type: .roundedRect)
         callButton.translatesAutoresizingMaskIntoConstraints = false
-        callButton.setTitle("Enviar mensagem", for: .normal)
+        callButton.setTitle("Fazer ligação", for: .normal)
         callButton.layer.cornerRadius = 25
-        callButton.backgroundColor = #colorLiteral(red: 0.1960784346, green: 0.3411764801, blue: 0.1019607857, alpha: 1)
+        callButton.backgroundColor = #colorLiteral(red: 0.2745098174, green: 0.4862745106, blue: 0.1411764771, alpha: 1)
         callButton.setTitleColor(#colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), for: .normal)
         callButton.addTarget(self, action: #selector(callButtonAction(_ :)), for: .touchUpInside)
 
@@ -86,11 +89,34 @@ class MainViewController: UIViewController {
         callButton.heightAnchor.constraint(equalToConstant: 70).isActive = true
     }
 
+    private func setupDismissNumberPad(on textField: UITextField) {
+        let toolbar = UIToolbar(frame: CGRect(origin: .zero, size: .init(width: view.frame.size.width, height: 30)))
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(dismissKeyboard))
+        toolbar.setItems([flexSpace, doneButton], animated: false)
+        toolbar.sizeToFit()
+
+        textField.inputAccessoryView = toolbar
+    }
+
+    @objc private func dismissKeyboard() {
+        self.view.endEditing(true)
+    }
+
     @objc private func messageButtonAction(_ sender: UIButton) {
-        print("hi")
+        guard let phoneNumber = numberTextField.text else { return }
+        if let messageComponent = message.smsConfig(send: phoneNumber) {
+            messageComponent.messageComposeDelegate = message
+            self.present(messageComponent, animated: true, completion: nil)
+        }
     }
 
     @objc private func callButtonAction(_ sender: UIButton) {
-        print("hi")
+        guard let phoneNumber = numberTextField.text else { return }
+        if let url = URL(string: "tel://\(phoneNumber)"), UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        } else {
+            fatalError()
+        }
     }
 }
