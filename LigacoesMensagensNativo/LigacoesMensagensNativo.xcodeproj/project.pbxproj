@@ -58,13 +58,29 @@
 			children = (
 				0C79315C242B0C6500D22706 /* AppDelegate.swift */,
 				0C79315E242B0C6500D22706 /* SceneDelegate.swift */,
-				0C793170242B0D7C00D22706 /* MainViewController.swift */,
+				0CC033AC242BBB370090F9AF /* View */,
+				0CC033AD242BBB460090F9AF /* Components */,
 				0C793165242B0C6700D22706 /* Assets.xcassets */,
 				0C793167242B0C6700D22706 /* LaunchScreen.storyboard */,
 				0C79316A242B0C6700D22706 /* Info.plist */,
-				0C793172242B40A900D22706 /* Message.swift */,
 			);
 			path = LigacoesMensagensNativo;
+			sourceTree = "<group>";
+		};
+		0CC033AC242BBB370090F9AF /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0C793170242B0D7C00D22706 /* MainViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		0CC033AD242BBB460090F9AF /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				0C793172242B40A900D22706 /* Message.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

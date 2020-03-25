@@ -84,12 +84,12 @@ class MainViewController: UIViewController {
         validateLabel.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
 
         messageButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        messageButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -40).isActive = true
+        messageButton.bottomAnchor.constraint(equalTo: callButton.topAnchor, constant: -8).isActive = true
         messageButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
         messageButton.heightAnchor.constraint(equalToConstant: 70).isActive = true
 
         callButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        callButton.bottomAnchor.constraint(equalTo: messageButton.topAnchor, constant: -8).isActive = true
+        callButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -40).isActive = true
         callButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
         callButton.heightAnchor.constraint(equalToConstant: 70).isActive = true
     }
@@ -111,10 +111,12 @@ class MainViewController: UIViewController {
                 validateLabel.text = "Digite um número válido"
                 messageButton.isHidden = true
                 callButton.isHidden = true
+            } else if tempNumb.count == 8 {
+                validateLabel.text = ""
+                callButton.isHidden = false
             } else {
                 validateLabel.text = ""
                 messageButton.isHidden = false
-                callButton.isHidden = false
             }
         }
     }
