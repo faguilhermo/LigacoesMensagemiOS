@@ -11,6 +11,7 @@ import UIKit
 class MainViewController: UIViewController {
 
     var message = Message()
+    var tempNumb = ""
 
     private lazy var numberTextField: UITextField = {
         let numberTextField = UITextField(frame: .zero)
@@ -19,6 +20,8 @@ class MainViewController: UIViewController {
         numberTextField.textContentType = .telephoneNumber
         numberTextField.keyboardType = .numberPad
         numberTextField.clearButtonMode = .always
+        numberTextField.delegate = self
+        numberTextField.addTarget(self, action: #selector(typingName), for: .editingChanged)
         setupDismissNumberPad(on: numberTextField)
 
         return numberTextField
@@ -27,6 +30,7 @@ class MainViewController: UIViewController {
     private lazy var validateLabel: UILabel = {
         let validateLabel = UILabel(frame: .zero)
         validateLabel.translatesAutoresizingMaskIntoConstraints = false
+        validateLabel.textColor = #colorLiteral(red: 0.5725490451, green: 0, blue: 0.2313725501, alpha: 1)
         validateLabel.text = ""
 
         return validateLabel
@@ -39,7 +43,7 @@ class MainViewController: UIViewController {
         messageButton.layer.cornerRadius = 25
         messageButton.backgroundColor = #colorLiteral(red: 0.2745098174, green: 0.4862745106, blue: 0.1411764771, alpha: 1)
         messageButton.setTitleColor(#colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), for: .normal)
-        messageButton.addTarget(self, action: #selector(messageButtonAction(_ :)), for: .touchUpInside)
+        messageButton.addTarget(self, action: #selector(messageButtonAction(_ :)), for: .allEvents)
 
         return messageButton
     }()
@@ -63,6 +67,8 @@ class MainViewController: UIViewController {
         view.addSubview(validateLabel)
         view.addSubview(messageButton)
         view.addSubview(callButton)
+        messageButton.isHidden = true
+        callButton.isHidden = true
 
         setupLayout()
     }
@@ -76,7 +82,6 @@ class MainViewController: UIViewController {
 
         validateLabel.topAnchor.constraint(equalTo: numberTextField.bottomAnchor, constant: 4).isActive = true
         validateLabel.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
-        validateLabel.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: 20).isActive = true
 
         messageButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         messageButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -40).isActive = true
@@ -97,6 +102,21 @@ class MainViewController: UIViewController {
         toolbar.sizeToFit()
 
         textField.inputAccessoryView = toolbar
+    }
+
+    @objc private func typingName(textField:UITextField){
+        if let typedText = textField.text {
+            tempNumb = typedText
+            if tempNumb.count < 8 {
+                validateLabel.text = "Digite um número válido"
+                messageButton.isHidden = true
+                callButton.isHidden = true
+            } else {
+                validateLabel.text = ""
+                messageButton.isHidden = false
+                callButton.isHidden = false
+            }
+        }
     }
 
     @objc private func dismissKeyboard() {
@@ -120,3 +140,14 @@ class MainViewController: UIViewController {
         }
     }
 }
+
+extension MainViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let textFieldText = numberTextField.text,
+              let rangeOfTextToReplace = Range(range, in: textFieldText) else { return false }
+        let substringToReplace = textFieldText[rangeOfTextToReplace]
+        let count = textFieldText.count - substringToReplace.count + string.count
+        return count <= 9
+    }
+}
+
