@@ -9,6 +9,8 @@
 import MessageUI
 
 class Message: NSObject {
+    /// Creates a message component to be called.
+    /// - Parameter sms: the phone number to send the message
     func smsConfig(send sms: String) -> MFMessageComposeViewController? {
         if MFMessageComposeViewController.canSendText() {
             let messageComponent = MFMessageComposeViewController()
@@ -24,6 +26,7 @@ class Message: NSObject {
 
 extension Message: MFMessageComposeViewControllerDelegate {
     func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
+        // dismiss the message component
         controller.dismiss(animated: true, completion: nil)
     }
 }

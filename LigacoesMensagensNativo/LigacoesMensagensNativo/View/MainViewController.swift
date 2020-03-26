@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MainViewController: UIViewController {
+final class MainViewController: UIViewController {
 
     var message = Message()
     var tempNumb = ""
@@ -21,7 +21,7 @@ class MainViewController: UIViewController {
         numberTextField.keyboardType = .numberPad
         numberTextField.clearButtonMode = .always
         numberTextField.delegate = self
-        numberTextField.addTarget(self, action: #selector(typingName), for: .editingChanged)
+        numberTextField.addTarget(self, action: #selector(typingNumber), for: .editingChanged)
         setupDismissNumberPad(on: numberTextField)
 
         return numberTextField
@@ -73,6 +73,7 @@ class MainViewController: UIViewController {
         setupLayout()
     }
 
+    /// Setup all elements constraints.
     private func setupLayout() {
         numberTextField.leftAnchor
             .constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
@@ -94,6 +95,8 @@ class MainViewController: UIViewController {
         callButton.heightAnchor.constraint(equalToConstant: 70).isActive = true
     }
 
+    /// Add functions like send message or call due the total of numbers in the text field.
+    /// - Parameter textField: The text field with a number pad to add a done button to dismiss keyboard.
     private func setupDismissNumberPad(on textField: UITextField) {
         let toolbar = UIToolbar(frame: CGRect(origin: .zero, size: .init(width: view.frame.size.width, height: 30)))
         let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
@@ -104,7 +107,9 @@ class MainViewController: UIViewController {
         textField.inputAccessoryView = toolbar
     }
 
-    @objc private func typingName(textField:UITextField){
+    /// Add functions like send message or call due the total of numbers in the text field.
+    /// - Parameter textField: The text field to be limited and recieve the actions.
+    @objc private func typingNumber(textField: UITextField){
         if let typedText = textField.text {
             tempNumb = typedText
             if tempNumb.count < 8 {
@@ -113,6 +118,7 @@ class MainViewController: UIViewController {
                 callButton.isHidden = true
             } else if tempNumb.count == 8 {
                 validateLabel.text = ""
+                messageButton.isHidden = true 
                 callButton.isHidden = false
             } else {
                 validateLabel.text = ""
@@ -144,6 +150,8 @@ class MainViewController: UIViewController {
 }
 
 extension MainViewController: UITextFieldDelegate {
+    // Asks the delegate if the specified text should be changed.
+    // And gives a max length of characters allowed in the text field (9)
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let textFieldText = numberTextField.text,
               let rangeOfTextToReplace = Range(range, in: textFieldText) else { return false }
