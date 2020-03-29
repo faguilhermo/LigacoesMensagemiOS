@@ -8,7 +8,7 @@
 
 import MessageUI
 
-class Message: NSObject {
+final class Message: NSObject {
     /// Creates a message component to be called.
     /// - Parameter sms: the phone number to send the message
     func smsConfig(send sms: String) -> MFMessageComposeViewController? {

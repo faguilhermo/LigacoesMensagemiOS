@@ -10,9 +10,12 @@ import UIKit
 
 final class MainViewController: UIViewController {
 
+    // MARK: - Vatiables
     var message = Message()
     var tempNumb = ""
 
+    // MARK: - UI elements
+    /// Creates a text field to add a telephone number.
     private lazy var numberTextField: UITextField = {
         let numberTextField = UITextField(frame: .zero)
         numberTextField.translatesAutoresizingMaskIntoConstraints = false
@@ -27,6 +30,7 @@ final class MainViewController: UIViewController {
         return numberTextField
     }()
 
+    /// Creates a label to validate the telephone number.
     private lazy var validateLabel: UILabel = {
         let validateLabel = UILabel(frame: .zero)
         validateLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -36,6 +40,7 @@ final class MainViewController: UIViewController {
         return validateLabel
     }()
 
+    /// Creates a button to send messages to the registered number.
     private lazy var messageButton: UIButton = {
         let messageButton = UIButton(type: .roundedRect)
         messageButton.translatesAutoresizingMaskIntoConstraints = false
@@ -48,6 +53,7 @@ final class MainViewController: UIViewController {
         return messageButton
     }()
 
+    /// Creates a button to call to the registered number.
     private lazy var callButton: UIButton = {
         let callButton = UIButton(type: .roundedRect)
         callButton.translatesAutoresizingMaskIntoConstraints = false
@@ -60,6 +66,7 @@ final class MainViewController: UIViewController {
         return callButton
     }()
 
+    // MARK: - Application lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
@@ -73,28 +80,7 @@ final class MainViewController: UIViewController {
         setupLayout()
     }
 
-    /// Setup all elements constraints.
-    private func setupLayout() {
-        numberTextField.leftAnchor
-            .constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-        numberTextField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 20).isActive = true
-        numberTextField.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        numberTextField.heightAnchor.constraint(equalToConstant: 20).isActive = true
-
-        validateLabel.topAnchor.constraint(equalTo: numberTextField.bottomAnchor, constant: 4).isActive = true
-        validateLabel.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
-
-        messageButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        messageButton.bottomAnchor.constraint(equalTo: callButton.topAnchor, constant: -8).isActive = true
-        messageButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
-        messageButton.heightAnchor.constraint(equalToConstant: 70).isActive = true
-
-        callButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        callButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -40).isActive = true
-        callButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
-        callButton.heightAnchor.constraint(equalToConstant: 70).isActive = true
-    }
-
+    // MARK: - Functions
     /// Add functions like send message or call due the total of numbers in the text field.
     /// - Parameter textField: The text field with a number pad to add a done button to dismiss keyboard.
     private func setupDismissNumberPad(on textField: UITextField) {
@@ -127,10 +113,14 @@ final class MainViewController: UIViewController {
         }
     }
 
+    /// Dismiss the keyboard when the button done is clicked
     @objc private func dismissKeyboard() {
         self.view.endEditing(true)
     }
 
+    // MARK: - Button action
+    /// Message button action, present the message component to send a message.
+    /// - Parameter _: the button itself
     @objc private func messageButtonAction(_ sender: UIButton) {
         guard let phoneNumber = numberTextField.text else { return }
         if let messageComponent = message.smsConfig(send: phoneNumber) {
@@ -139,6 +129,8 @@ final class MainViewController: UIViewController {
         }
     }
 
+    /// Call button action, show the option to call the telephone number shown.
+    /// - Parameter _: the button itself.
     @objc private func callButtonAction(_ sender: UIButton) {
         guard let phoneNumber = numberTextField.text else { return }
         if let url = URL(string: "tel://\(phoneNumber)"), UIApplication.shared.canOpenURL(url) {
@@ -149,6 +141,7 @@ final class MainViewController: UIViewController {
     }
 }
 
+// MARK: - Extensions
 extension MainViewController: UITextFieldDelegate {
     // Asks the delegate if the specified text should be changed.
     // And gives a max length of characters allowed in the text field (9)
@@ -161,3 +154,29 @@ extension MainViewController: UITextFieldDelegate {
     }
 }
 
+extension MainViewController {
+    /// Setup all elements constraints.
+    private func setupLayout() {
+        numberTextField.leftAnchor
+            .constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
+        numberTextField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
+        numberTextField.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        numberTextField.heightAnchor.constraint(equalToConstant: 20).isActive = true
+
+        validateLabel.topAnchor.constraint(equalTo: numberTextField.bottomAnchor, constant: 4).isActive = true
+        validateLabel.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
+        validateLabel.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+
+        messageButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        messageButton.bottomAnchor.constraint(equalTo: callButton.topAnchor, constant: -8).isActive = true
+        messageButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
+        messageButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+        messageButton.heightAnchor.constraint(equalToConstant: 70).isActive = true
+
+        callButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        callButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -40).isActive = true
+        callButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
+        callButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+        callButton.heightAnchor.constraint(equalToConstant: 70).isActive = true
+    }
+}
